@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>添加事项</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js">
+		</script>
+		<style type="text/css">
+			li {
+				list-style: none;
+			}
+
+			.header {
+				width: 100%;
+				height: 80px;
+				margin: 0 auto;
+				background-color: #828282;
+				text-align: center;
+				line-height: 90px;
+			}
+
+			.header label {
+				padding-right: 50px;
+				font-size: 24px;
+				font-weight: 700;
+			}
+
+			.content {
+				width: 100%;
+				height: 500px;
+				background-color: #f3f5f7;
+				/* line-height: 90px; */
+			}
+
+			.content>h2 {
+				/* float: left; */
+				text-align: center;
+				padding-right: 300px;
+			}
+
+			.content>span {
+				display: block;
+				/* float: left; */
+				text-align: center;
+				margin-right: 200px;
+			}
+
+			.content li {
+				text-align: center;
+				padding-right: 150px;
+			}
+
+			.content li button {
+				margin-left: 100px;
+			}
+
+			.content li button:hover {
+				font-weight: 700;
+				color: aqua;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="header">
+				<label for="title">ToDoList：</label>
+				<input type="text" placeholder="请输入任务" v-model="inputvalue" @keyup.enter="add" />
+				<input type="button" value="添加" @click="add">
+			</div>
+			<div class="content">
+
+				<h2>正在进行</h2>
+				<section v-for="(item,index) in list">
+
+					<ul>
+						<li>
+							<input v-if="checked" @click="okAdd(index)" type="checkbox">
+							<span>{{index +1 }}</span>
+							<label>{{item}}</label>
+							<button class="act" @click="remove(index)">删除</button>
+						</li>
+					</ul>
+				</section>
+				<span>一共{{ list.length }}条数据</span>
+
+				<h2>已经完成</h2>
+				<section v-for="(item,index) in newlist">
+					<ul>
+						<li>
+							<span>{{index +1 }}</span>
+							<label>{{item}}</label>
+							<button class="act" @click="remove(index)">删除</button>
+						</li>
+					</ul>
+				</section>
+				<span>一共{{ newlist.length }}条数据</span>
+			</div>
+		</div>
+		<script>
+			var app = new Vue({
+				el: "#app",
+				data: {
+					list: ["工作", "学习"],
+					newlist: ["任务"],
+					inputvalue: "",
+					checked: true
+
+				},
+				methods: {
+					// 添加事项
+					add: function() {
+						this.list.push(this.inputvalue);
+					},
+					// 删除一个事项
+					remove: function(index) {
+						this.list.shift(this.list[index]);
+						// this.list.splice(index,1);
+						// 两种方法 可用
+					},
+					// 删除全部的事项
+					move: function() {
+						this.list = [];
+					},
+					okAdd:function(index) { //已完成添加
+						if (this.checked) {
+							//如果 list的单选框选中 就添加到 newList
+							this.newlist.push(this.list[index])
+							//删除 list的任务
+							this.remove(index)
+						}
+					},
+				}
+			})
+		</script>
+	</body>
+</html>
